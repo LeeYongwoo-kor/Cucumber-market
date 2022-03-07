@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 
 const Upload: NextPage = () => {
   return (
-    <div className="px-4 py-16">
+    <div className="space-y-5 px-4 py-16">
       <div>
         <label
           htmlFor="price"
@@ -25,7 +25,7 @@ const Upload: NextPage = () => {
           <input id="price" className="hidden" type="file" />
         </label>
       </div>
-      <div className="my-5">
+      <div>
         <label
           htmlFor="price"
           className="mb-1 block text-sm font-medium text-gray-700"
@@ -48,18 +48,22 @@ const Upload: NextPage = () => {
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="description"
+          className="mb-1 block text-sm font-medium text-gray-700"
+        >
           Description
         </label>
         <div>
           <textarea
+            id="description"
             className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring-1 focus:ring-green-600"
             rows={4}
           />
         </div>
       </div>
-      <button className="mt-4 w-full rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
-        Upload product
+      <button className="w-full rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
+        Upload Item
       </button>
     </div>
   );
