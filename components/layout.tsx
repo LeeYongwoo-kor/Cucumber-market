@@ -21,14 +21,9 @@ export default function Layout({
   };
   return (
     <div>
-      <div
-        className={cls(
-          !canGoBack ? "justify-center" : "",
-          "fixed top-0 flex w-full max-w-xl items-center border-b bg-white py-4 text-lg font-medium text-gray-700"
-        )}
-      >
+      <div className="fixed top-0 flex h-12 w-full max-w-xl items-center justify-center  border-b bg-white px-10 text-lg  font-medium text-gray-800">
         {canGoBack ? (
-          <button onClick={onClick}>
+          <button onClick={onClick} className="absolute left-4">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -45,13 +40,22 @@ export default function Layout({
             </svg>
           </button>
         ) : null}
-        {title ? <span>{title}</span> : null}
+        {title ? (
+          <span className={cls(canGoBack ? "mx-auto" : "", "")}>{title}</span>
+        ) : null}
       </div>
       <div className={cls("pt-16", hasTabBar ? "pb-24" : "")}>{children}</div>
       {hasTabBar ? (
         <nav className="fixed bottom-0 flex w-full max-w-xl items-center justify-between border-t bg-white pb-8 pt-3 text-gray-700">
           <Link href="/">
-            <a className="flex flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-col items-center space-y-2",
+                router.pathname === "/"
+                  ? "text-green-600"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -70,7 +74,14 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/streams">
-            <a className="flex flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-col items-center space-y-2",
+                router.pathname === "/streams"
+                  ? "text-green-600"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -89,7 +100,14 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/community">
-            <a className="flex flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-col items-center space-y-2",
+                router.pathname === "/community"
+                  ? "text-green-600"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -108,7 +126,14 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/chats">
-            <a className="flex flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-col items-center space-y-2",
+                router.pathname === "/chats"
+                  ? "text-green-600"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -127,7 +152,14 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/profile">
-            <a className="flex flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-col items-center space-y-2",
+                router.pathname === "/profile"
+                  ? "text-green-600"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
