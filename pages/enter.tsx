@@ -1,12 +1,34 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Button from "../components/button";
 import Input from "../components/input";
 import { cls } from "../libs/utils";
 
+interface EnterForm {
+  email?: string;
+  phone?: string;
+}
+
 export default function Enter() {
+  const [submitting, setSubmitting] = useState(false);
+  const { register, handleSubmit, reset } = useForm<EnterForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
-  const onEmailClick = () => setMethod("email");
-  const onPhoneClick = () => setMethod("phone");
+  const onEmailClick = () => {
+    reset();
+    setMethod("email");
+  };
+  const onPhoneClick = () => {
+    reset();
+    setMethod("phone");
+  };
+  const onValid = (data: EnterForm) => {
+    setSubmitting(true);
+    fetch("/api/users/enter", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-type": "application/json" },
+    }).then(() => setSubmitting(false));
+  };
   return (
     <div className="mt-16 px-4">
       <h3 className="text-center text-3xl font-bold">Enter to Cucumber</h3>
@@ -38,9 +60,18 @@ export default function Enter() {
             </button>
           </div>
         </div>
-        <form className="mt-8 flex flex-col space-y-4">
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className="mt-8 flex flex-col space-y-4"
+        >
           {method === "email" ? (
-            <Input name="email" label="Email address" type="email" required />
+            <Input
+              name="email"
+              label="Email address"
+              type="email"
+              register={register("email")}
+              required
+            />
           ) : null}
           {method === "phone" ? (
             <Input
@@ -48,12 +79,15 @@ export default function Enter() {
               label="Phone number"
               type="number"
               kind="phone"
+              register={register("phone")}
               required
             />
           ) : null}
           {method === "email" ? <Button text={"Get login link"} /> : null}
           {method === "phone" ? (
-            <Button text={"Get one-time password"} />
+            <Button
+              text={submitting ? "Loading..." : "Get one-time password"}
+            />
           ) : null}
         </form>
         <div className="mt-6">
