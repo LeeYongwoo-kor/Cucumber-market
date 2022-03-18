@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import client from "../../../libs/client";
 
 export default async function handler(
   request: NextApiRequest,
@@ -8,5 +7,6 @@ export default async function handler(
   if (request.method !== "POST") {
     response.status(400).end();
   }
+  response.json({ ok: true });
   response.status(200).end();
 }
