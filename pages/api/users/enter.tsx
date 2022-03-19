@@ -1,12 +1,8 @@
+import withHandler from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
-  if (request.method !== "POST") {
-    response.status(400).end();
-  }
-  response.json({ ok: true });
-  response.status(200).end();
+async function handler(request: NextApiRequest, response: NextApiResponse) {
+  return response.status(200).end();
 }
+
+export default withHandler("POST", handler);
