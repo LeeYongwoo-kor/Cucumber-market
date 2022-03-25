@@ -33,22 +33,20 @@ async function handler(
     },
   });
   if (phone) {
-    /*
-    await twilioClienct.messages.create({
+    /*     await twilioClienct.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
       to: process.env.MY_PHONE!,
       body: `Welcome to Cucumber Market! Sending you a message from the Cucumber Market. Enter 6 digits of the token received from message. Your login token is ${payload}.`,
-    });
-    */
+    }); */
     // Uncomment if you want to waste your twilio's credit 🤔
   } else if (email) {
-    await mail.send({
+    /*     await mail.send({
       from: process.env.ADMIN_EMAIL!,
       to: email,
       subject: "Your Cucumber Market Verification Email",
       text: `Your token is ${payload}`,
       html: `<strong>Your token is ${payload}</strong>`,
-    });
+    }); */
   }
   // to: phone -> Theoeretically, This code is correct
 
