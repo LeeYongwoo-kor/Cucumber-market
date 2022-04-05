@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Item } from "@prisma/client";
 
 interface UploadItemForm {
   name: string;
@@ -16,7 +17,7 @@ interface UploadItemForm {
 
 interface UploadItemMutation {
   ok: boolean;
-  items: Items;
+  item: Item;
 }
 
 const Upload: NextPage = () => {
@@ -30,7 +31,7 @@ const Upload: NextPage = () => {
   };
   useEffect(() => {
     if (data?.ok) {
-      router.push(`/items/${data.items.id}`);
+      router.push(`/items/${data.item.id}`);
     }
   }, [data, router]);
   return (

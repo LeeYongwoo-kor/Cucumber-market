@@ -4,21 +4,29 @@ import Item from "@components/item";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
 import Head from "next/head";
+import useSWR from "swr";
+import { Item as PrItem } from "@prisma/client";
+
+interface ProductResponse {
+  ok: boolean;
+  items: PrItem[];
+}
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
+  const { data } = useSWR<ProductResponse>("api/items");
   return (
     <Layout title="Home" hasTabBar>
       <Head>
         <title>Home</title>
       </Head>
       <div className="flex flex-col space-y-5 divide-y">
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+        {data?.items?.map((item) => (
           <Item
-            id={i}
-            key={i}
-            title="New Cucumber Phone"
-            price={99}
+            id={item.id}
+            key={item.id}
+            title={item.name}
+            price={item.price}
             comments={1}
             hearts={1}
           />
