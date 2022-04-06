@@ -1,8 +1,15 @@
 import type { NextPage } from "next";
 import Button from "@components/button";
 import Layout from "@components/layout";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import Link from "next/link";
 
 const ItemDetail: NextPage = () => {
+  const router = useRouter();
+  const { data } = useSWR(
+    router.query.id ? `/api/items/${router.query.id}` : null
+  );
   return (
     <Layout canGoBack>
       <div className="px-4 py-4">
@@ -11,23 +18,25 @@ const ItemDetail: NextPage = () => {
           <div className="flex items-center space-x-3 border-t border-b py-3">
             <div className="aspect-square w-12 rounded-full bg-slate-300" />
             <div className="cursor-pointer">
-              <p className="text-sm font-medium text-gray-700">Mr Lee</p>
-              <p className="text-xs font-medium text-gray-600">
-                View profile &rarr;
+              <p className="text-sm font-medium text-gray-700">
+                {data?.item?.user?.name}
               </p>
+              <Link href={`/users/profiles/${data?.item?.user?.id}`}>
+                <a className="text-xs font-medium text-gray-600">
+                  View profile &rarr;
+                </a>
+              </Link>
             </div>
           </div>
           <div className="mt-5">
-            <h1 className="text-3xl font-bold text-gray-900">Kimchi</h1>
-            <span className="mt-3 text-2xl text-gray-900">$140</span>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {data?.item?.name}
+            </h1>
+            <span className="mt-3 text-2xl text-gray-900">
+              ${data?.item?.price}
+            </span>
             <p className="my-6 text-base text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Consequatur, cupiditate expedita? At aliquam in sapiente error,
-              natus vero cupiditate, nostrum numquam harum ipsam animi adipisci
-              obcaecati quia blanditiis. At, porro? Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Minus sint vero quisquam saepe
-              officia molestiae autem perspiciatis ea iste nobis quia harum
-              molestias numquam, a perferendis minima quibusdam placeat error.
+              {data?.item?.description}
             </p>
             <div className="flex items-center justify-between space-x-2">
               <Button large text="Talk to seller" />
