@@ -4,10 +4,21 @@ import Layout from "@components/layout";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import Link from "next/link";
+import { Item, User } from "@prisma/client";
+
+interface ItemWithUser extends Item {
+  user: User;
+}
+
+interface ItemDetailResponse {
+  ok: boolean;
+  item: ItemWithUser;
+  relatedItems: Item[];
+}
 
 const ItemDetail: NextPage = () => {
   const router = useRouter();
-  const { data } = useSWR(
+  const { data } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/items/${router.query.id}` : null
   );
   return (
@@ -63,11 +74,13 @@ const ItemDetail: NextPage = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
           <div className="grid grid-cols-2 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((_, i) => (
-              <div key={i}>
+            {data?.relatedItems.map((item) => (
+              <div key={item.id}>
                 <div className="mb-4 h-56 w-full bg-slate-300" />
-                <h3 className="-mb-1 text-gray-700">Cucumber Kimchi</h3>
-                <span className="text-xs font-medium text-gray-900">$100</span>
+                <h3 className="-mb-1 text-gray-700">{item.name}</h3>
+                <span className="text-xs font-medium text-gray-900">
+                  ${item.price}
+                </span>
               </div>
             ))}
           </div>
