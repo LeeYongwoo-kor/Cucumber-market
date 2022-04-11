@@ -7,7 +7,10 @@ async function handler(
   request: NextApiRequest,
   response: NextApiResponse<ResponseType>
 ) {
-  const { id } = request.query;
+  const {
+    query: { id },
+    session: { user },
+  } = request;
   const item = await client.item.findUnique({
     where: {
       id: +id.toString(),
@@ -37,6 +40,17 @@ async function handler(
       },
     },
   });
+  const isLiked = Boolean(
+    await client.fav.findFirst({
+      where: {
+        itemId: item?.id,
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
   response.json({ ok: true, item, relatedItems });
 }
 
