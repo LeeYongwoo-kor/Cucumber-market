@@ -31,9 +31,7 @@ async function handler(
             id: user?.id,
           },
         },
-      },
-      item: {
-        user: {
+        item: {
           connect: {
             id: +id.toString(),
           },
