@@ -7,12 +7,23 @@ async function handler(
   request: NextApiRequest,
   response: NextApiResponse<ResponseType>
 ) {
-  const profile = await client.user.findUnique({
-    where: { id: request.session.user?.id },
+  const {
+    body: { question },
+    session: { user },
+  } = request;
+  const post = await client.post.create({
+    data: {
+      question,
+      user: {
+        connect: {
+          id: user?.id,
+        },
+      },
+    },
   });
   response.json({
     ok: true,
-    profile,
+    post,
   });
 }
 
