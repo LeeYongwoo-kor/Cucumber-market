@@ -9,43 +9,41 @@ async function handler(
 ) {
   const {
     query: { id },
+    session: { user },
   } = request;
-  const post = await client.post.findUnique({
+  const alreadyExists = await client.wondering.findFirst({
     where: {
-      id: +id.toString(),
+      userId: user?.id,
+      postId: +id.toString(),
     },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          avatar: true,
-        },
+    select: {
+      id: true,
+    },
+  });
+  if (alreadyExists) {
+    await client.wondering.delete({
+      where: {
+        id: alreadyExists.id,
       },
-      answers: {
-        select: {
-          answer: true,
-          id: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              avatar: true,
-            },
+    });
+  } else {
+    await client.wondering.create({
+      data: {
+        user: {
+          connect: {
+            id: user?.id,
+          },
+        },
+        post: {
+          connect: {
+            id: +id.toString(),
           },
         },
       },
-      _count: {
-        select: {
-          answers: true,
-          wonderings: true,
-        },
-      },
-    },
-  });
+    });
+  }
   response.json({
     ok: true,
-    post,
   });
 }
 
