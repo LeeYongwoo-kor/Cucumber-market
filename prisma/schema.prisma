@@ -22,10 +22,12 @@ model User {
   updatedAt DateTime @updatedAt
   tokens    Token[]
   items     Item[]
-  favs      Fav[]
   posts     Post[]
   answers   Answer[]
   wonderings  Wondering[]
+  writtenReviews  Review[] @relation(name: "writtenReviews")
+  receivedReviews Review[] @relation(name: "receivedReviews")
+  records   Record[]
 }
 
 model Token {
@@ -47,17 +49,7 @@ model Item {
   name        String
   price       Float
   description String   @db.MediumText
-  favs        Fav[]
-}
-
-model Fav {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  itemId      Int
-  item        Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  records     Record[]
 }
 
 model Post {
@@ -92,4 +84,32 @@ model Wondering {
   post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  review       String   @db.MediumText
+  createBy     User     @relation(name:"writtenReviews", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById  Int
+  createFor    User     @relation(name:"receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
+  createdForId Int
+}
+
+model Record {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId      Int
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  kind        Kind 
+}
+
+enum Kind {
+  Fav
+  Purchase
+  Sale
 }
