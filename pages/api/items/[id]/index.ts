@@ -1,3 +1,4 @@
+import { RecordKind } from "@prisma/client";
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { withApiSession } from "@libs/server/withSession";
@@ -41,17 +42,18 @@ async function handler(
     },
   });
   const isLiked = Boolean(
-    await client.fav.findFirst({
+    await client.record.findFirst({
       where: {
         itemId: item?.id,
         userId: user?.id,
+        recordKind: RecordKind.Fav,
       },
       select: {
         id: true,
       },
     })
   );
-  response.json({ ok: true, item, relatedItems });
+  response.json({ ok: true, item, relatedItems, isLiked });
 }
 
 export default withApiSession(

@@ -46,8 +46,7 @@ async function handler(
         },
         _count: {
           select: {
-            wonderings: true,
-            answers: true,
+            counts: true,
           },
         },
       },

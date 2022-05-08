@@ -1,6 +1,7 @@
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { withApiSession } from "@libs/server/withSession";
+import { CountKind } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(
@@ -23,9 +24,9 @@ async function handler(
           avatar: true,
         },
       },
-      answers: {
+      counts: {
         select: {
-          answer: true,
+          count: true,
           id: true,
           user: {
             select: {
@@ -38,16 +39,16 @@ async function handler(
       },
       _count: {
         select: {
-          answers: true,
-          wonderings: true,
+          counts: true,
         },
       },
     },
   });
-  const isWondering = await client.wondering.findFirst({
+  const isWondering = await client.count.findFirst({
     where: {
       postId: +id.toString(),
       userId: user?.id,
+      countKind: CountKind.Wondering,
     },
   });
   response.json({

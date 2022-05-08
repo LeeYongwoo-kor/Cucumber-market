@@ -23,11 +23,10 @@ model User {
   tokens    Token[]
   items     Item[]
   posts     Post[]
-  answers   Answer[]
-  wonderings  Wondering[]
   writtenReviews  Review[] @relation(name: "writtenReviews")
   receivedReviews Review[] @relation(name: "receivedReviews")
   records   Record[]
+  counts    Count[]
 }
 
 model Token {
@@ -50,6 +49,7 @@ model Item {
   price       Float
   description String   @db.MediumText
   records     Record[]
+  favCount    Int      @default(0)
 }
 
 model Post {
@@ -61,29 +61,9 @@ model Post {
   longitude   Float?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  answers     Answer[]
-  wonderings  Wondering[]
-}
-
-model Answer {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId      Int
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  answer      String   @db.MediumText
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Wondering {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId      Int
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  counts      Count[]
+  wonderingCount  Int
+  answerCount     Int
 }
 
 model Review {
@@ -95,6 +75,18 @@ model Review {
   createdById  Int
   createFor    User     @relation(name:"receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
   createdForId Int
+  score        Int
+}
+
+model Count {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId      Int
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  countKind   CountKind
 }
 
 model Record {
@@ -105,10 +97,15 @@ model Record {
   item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  kind        Kind 
+  recordKind  RecordKind
 }
 
-enum Kind {
+enum CountKind {
+  Answer
+  Wondering
+}
+
+enum RecordKind {
   Fav
   Purchase
   Sale

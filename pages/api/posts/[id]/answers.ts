@@ -1,8 +1,8 @@
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { withApiSession } from "@libs/server/withSession";
+import { CountKind } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { compileFunction } from "vm";
 
 async function handler(
   request: NextApiRequest,
@@ -13,10 +13,11 @@ async function handler(
     session: { user },
     body: { answer },
   } = request;
-  const post = await client.answer.findFirst({
+  const post = await client.count.findFirst({
     where: {
       userId: user?.id,
       postId: +id.toString(),
+      countKind: CountKind.Answer,
     },
     select: {
       id: true,
@@ -27,7 +28,7 @@ async function handler(
       ok: false,
     });
   }
-  const newAnswer = await client.answer.create({
+  const newAnswer = await client.count.create({
     data: {
       user: {
         connect: {
@@ -39,6 +40,7 @@ async function handler(
           id: +id.toString(),
         },
       },
+      countKind: CountKind.Answer,
       answer,
     },
   });
