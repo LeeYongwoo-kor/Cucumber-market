@@ -34,6 +34,17 @@ async function handler(
       userId: user?.id,
       recordKind: recordKind(kind),
     },
+    include: {
+      item: {
+        include: {
+          _count: {
+            select: {
+              records: true,
+            },
+          },
+        },
+      },
+    },
   });
   response.json({
     ok: true,
