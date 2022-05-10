@@ -26,7 +26,7 @@ async function handler(
       },
       counts: {
         select: {
-          count: true,
+          answer: true,
           id: true,
           user: {
             select: {

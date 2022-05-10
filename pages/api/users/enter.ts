@@ -49,6 +49,7 @@ async function handler(
     }); */
   }
   // to: phone -> Theoeretically, This code is correct
+  console.log(payload);
 
   return response.json({
     ok: true,
