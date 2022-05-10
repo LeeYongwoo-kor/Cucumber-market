@@ -2,13 +2,13 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSWR from "swr";
 
-export default function useUser() {
-  const { data, error } = useSWR("/api/users/me");
+export default function useUser(publicPage: string[]) {
   const router = useRouter();
+  const { data, error } = useSWR("/api/users/me");
   useEffect(() => {
-    if (data && !data.ok) {
+    if (data && !data.ok && !publicPage.includes(router.pathname)) {
       router.replace("/enter");
     }
-  }, [data, router]);
+  }, [data, publicPage, router]);
   return { user: data?.profile, isLoading: !data && !error };
 }

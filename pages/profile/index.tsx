@@ -1,5 +1,4 @@
 import Layout from "@components/layout";
-import useUser from "@libs/client/useUser";
 import { cls } from "@libs/client/utils";
 import { Review, User } from "@prisma/client";
 import type { NextPage } from "next";
@@ -16,7 +15,6 @@ interface ReviewsResponse {
 }
 
 const Profile: NextPage = () => {
-  const { user } = useUser();
   const { data } = useSWR<ReviewsResponse>("/api/reviews");
   return (
     <Layout hasTabBar title="Profile">

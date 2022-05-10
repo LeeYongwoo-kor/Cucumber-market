@@ -1,13 +1,12 @@
-import type { NextPage } from "next";
 import Button from "@components/button";
 import Layout from "@components/layout";
-import { useRouter } from "next/router";
-import useSWR, { useSWRConfig } from "swr";
-import Link from "next/link";
-import { Item, User } from "@prisma/client";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
-import useUser from "@libs/client/useUser";
+import { Item, User } from "@prisma/client";
+import type { NextPage } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import useSWR, { useSWRConfig } from "swr";
 
 interface ItemWithUser extends Item {
   user: User;
@@ -21,7 +20,6 @@ interface ItemDetailResponse {
 }
 
 const ItemDetail: NextPage = () => {
-  const { user, isLoading } = useUser();
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
