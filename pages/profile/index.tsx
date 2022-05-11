@@ -1,8 +1,10 @@
 import Layout from "@components/layout";
 import { cls } from "@libs/client/utils";
 import { Review, User } from "@prisma/client";
+import { appendFile } from "fs";
 import type { NextPage } from "next";
 import Link from "next/link";
+import { prependOnceListener } from "process";
 import useSWR from "swr";
 
 interface ReviewWithUser extends Review {
@@ -12,6 +14,7 @@ interface ReviewWithUser extends Review {
 interface ReviewsResponse {
   ok: boolean;
   reviews: ReviewWithUser[];
+  user: User;
 }
 
 const Profile: NextPage = () => {
@@ -22,7 +25,9 @@ const Profile: NextPage = () => {
         <div className="items-center- flex space-x-3">
           <div className="aspect-square w-16 rounded-full bg-slate-300" />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900">{user?.name}</span>
+            <span className="font-medium text-gray-900">
+              {data?.user?.name}
+            </span>
             <Link href="/profile/edit">
               <a className="text-sm text-gray-700">Edit profile &rarr;</a>
             </Link>

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSWR from "swr";
 
-export default function useUser(publicPage: string[]) {
+export default function useUser(publicPage: readonly string[]) {
   const router = useRouter();
   const { data, error } = useSWR("/api/users/me");
   useEffect(() => {

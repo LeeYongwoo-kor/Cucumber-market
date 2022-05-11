@@ -19,6 +19,7 @@ async function handler(
   response.json({
     ok: true,
     reviews,
+    user,
   });
 }
 
