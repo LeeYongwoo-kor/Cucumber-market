@@ -1,11 +1,13 @@
 import Layout from "@components/layout";
 import { cls } from "@libs/client/utils";
 import { Review, User } from "@prisma/client";
-import { appendFile } from "fs";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { prependOnceListener } from "process";
 import useSWR from "swr";
+
+interface CurrentUserProps {
+  user: User;
+}
 
 interface ReviewWithUser extends Review {
   createdBy: User;
@@ -16,7 +18,7 @@ interface ReviewsResponse {
   reviews: ReviewWithUser[];
 }
 
-const Profile: NextPage = ({}, { user }) => {
+const Profile: NextPage<CurrentUserProps> = ({ user }) => {
   const { data } = useSWR<ReviewsResponse>("/api/reviews");
   return (
     <Layout hasTabBar title="Profile">
