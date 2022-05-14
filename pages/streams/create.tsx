@@ -1,17 +1,17 @@
-import type { NextPage } from "next";
 import Button from "@components/button";
 import Input from "@components/input";
 import Layout from "@components/layout";
 import TextArea from "@components/textarea";
-import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
-import { useEffect } from "react";
+import { Stream } from "@prisma/client";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Stream, User } from "@prisma/client";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 interface CreateForm {
   name: string;
-  price: string;
+  price: number;
   description: string;
 }
 
@@ -45,7 +45,7 @@ const Create: NextPage = () => {
           type="text"
         />
         <Input
-          register={register("price", { required: true })}
+          register={register("price", { required: true, valueAsNumber: true })}
           required
           label="Price"
           name="price"

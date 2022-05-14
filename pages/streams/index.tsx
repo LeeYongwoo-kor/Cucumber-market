@@ -2,17 +2,25 @@ import { NextPage } from "next";
 import Link from "next/link";
 import FloatingButton from "@components/floating-button";
 import Layout from "@components/layout";
+import { Stream } from "@prisma/client";
+import useSWR from "swr";
 
-const Stream: NextPage = () => {
+interface StreamResponse {
+  ok: boolean;
+  streams: Stream[];
+}
+
+const Streams: NextPage = () => {
+  const { data } = useSWR<StreamResponse>(`/api/streams`);
   return (
     <Layout hasTabBar title="Stream">
       <div className="space-y-4 divide-y-[1px] py-10">
-        {[1, 2, 3, 4, 5].map((_, i) => (
-          <Link key={i} href={`/streams/${i}`}>
+        {data?.streams.map((stream) => (
+          <Link key={stream.id} href={`/streams/${stream.id}`}>
             <a className="block px-4  pt-4">
               <div className="aspect-video w-full rounded-md bg-slate-300 shadow-sm" />
               <h1 className="mt-2 text-2xl font-bold text-gray-900">
-                Let&apos;s try cucumbers!
+                {stream.name}
               </h1>
             </a>
           </Link>
@@ -38,4 +46,4 @@ const Stream: NextPage = () => {
   );
 };
 
-export default Stream;
+export default Streams;
