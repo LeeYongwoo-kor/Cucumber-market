@@ -29,7 +29,10 @@ async function handler(
       stream,
     });
   } else if (request.method === "GET") {
-    const streams = await client.stream.findMany();
+    const streams = await client.stream.findMany({
+      take: 10,
+      skip: 10,
+    });
     response.json({
       ok: true,
       streams,

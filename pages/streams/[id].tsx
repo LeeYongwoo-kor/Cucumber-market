@@ -1,26 +1,45 @@
-import { NextPage } from "next";
 import Layout from "@components/layout";
 import Message from "@components/message";
-import useSWR from "swr";
-import { useRouter } from "next/router";
-import { Stream } from "@prisma/client";
-import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
+import { Stream, User } from "@prisma/client";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import useSWR, { mutate } from "swr";
 
+interface StreamMessage {
+  message: string;
+  id: number;
+  user: {
+    avatar?: string;
+    id: number;
+  };
+}
+
+interface StreamWithMessages extends Stream {
+  messages: StreamMessage[];
+}
 interface StreamResponse {
   ok: boolean;
-  stream: Stream;
+  stream: StreamWithMessages;
 }
 
 interface MessageForm {
   message: string;
 }
 
-const StreamDetail: NextPage = () => {
+interface CurrentUserProps {
+  user: User;
+}
+
+const StreamDetail: NextPage<CurrentUserProps> = ({ user }) => {
   const router = useRouter();
   const { register, handleSubmit, reset } = useForm<MessageForm>();
   const { data } = useSWR<StreamResponse>(
-    router.query.id ? `/api/streams/${router.query.id}` : null
+    router.query.id ? `/api/streams/${router.query.id}` : null,
+    {
+      refreshInterval: 1000,
+    }
   );
   const [sendMessage, { loading, data: sendMessageData }] = useMutation(
     `/api/streams/${router.query.id}/messages`
@@ -28,6 +47,21 @@ const StreamDetail: NextPage = () => {
   const onValid = (form: MessageForm) => {
     if (loading) return;
     reset();
+    mutate(
+      (prev: any) =>
+        prev &&
+        ({
+          ...prev,
+          stream: {
+            ...prev.stream,
+            messages: [
+              ...prev.stream.message,
+              { id: Date.now(), message: form.message, user: { ...user } },
+            ],
+          },
+        } as any),
+      false
+    );
     sendMessage(form);
   };
   return (
@@ -46,6 +80,13 @@ const StreamDetail: NextPage = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Live Chat</h2>
           <div className="h-[50vh] space-y-4 overflow-y-scroll py-10 px-4 pb-16">
+            {data?.stream.messages.map((message) => (
+              <Message
+                key={message.id}
+                message={message.message}
+                reversed={message.user.id !== user?.id}
+              ></Message>
+            ))}
             <Message message="Hi how much are you selling them for?" />
             <Message message="I want $20,000" reversed />
             <Message message="gesekkiya" />
