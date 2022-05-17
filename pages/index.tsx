@@ -4,7 +4,9 @@ import Layout from "@components/layout";
 import { Item as PrItem } from "@prisma/client";
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import useSWR from "swr";
+import cats from "../public/local.png";
 
 export interface ItemWithCount extends PrItem {
   _count: {
@@ -53,6 +55,7 @@ const Home: NextPage = () => {
           </svg>
         </FloatingButton>
       </div>
+      <Image src={cats} placeholder="blur" quality={5} />
     </Layout>
   );
 };
