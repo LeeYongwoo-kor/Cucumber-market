@@ -5,8 +5,9 @@ import { Item as PrItem } from "@prisma/client";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import cats from "../public/local.png";
+import client from "@libs/server/client";
 
 export interface ItemWithCount extends PrItem {
   _count: {
@@ -14,13 +15,13 @@ export interface ItemWithCount extends PrItem {
   };
 }
 
-interface ProductResponse {
+interface ItemResponse {
   ok: boolean;
   items: ItemWithCount[];
 }
 
 const Home: NextPage = () => {
-  const { data } = useSWR<ProductResponse>("api/items");
+  const { data } = useSWR<ItemResponse>("api/items");
   return (
     <Layout seoTitle="Enter Page" title="Home" hasTabBar>
       <Head>
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
             title={item.name}
             price={item.price}
             comments={1}
-            hearts={item._count.favs}
+            hearts={item._count?.favs}
           />
         ))}
         <FloatingButton href="/items/upload">
@@ -60,4 +61,30 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+const Page: NextPage<{ items: ItemWithCount[] }> = ({ items }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/items": {
+            ok: true,
+            items,
+          },
+        },
+      }}
+    >
+      <Home />
+    </SWRConfig>
+  );
+};
+
+export async function getServerSideProps() {
+  const items = await client.item.findMany({});
+  return {
+    props: {
+      items: JSON.parse(JSON.stringify(items)),
+    },
+  };
+}
+
+export default Page;
