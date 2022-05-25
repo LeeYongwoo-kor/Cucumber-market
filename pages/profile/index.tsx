@@ -21,7 +21,7 @@ interface ReviewsResponse {
 const Profile: NextPage<CurrentUserProps> = ({ user }) => {
   const { data } = useSWR<ReviewsResponse>("/api/reviews");
   return (
-    <Layout hasTabBar title="Profile">
+    <Layout seoTitle="Profile" hasTabBar title="Profile">
       <div className="py-10 px-4">
         <div className="items-center- flex space-x-3">
           <div className="aspect-square w-16 rounded-full bg-slate-300" />

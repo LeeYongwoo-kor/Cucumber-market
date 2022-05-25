@@ -35,7 +35,7 @@ const Upload: NextPage = () => {
     }
   }, [data, router]);
   return (
-    <Layout canGoBack title="Upload Product">
+    <Layout seoTitle="Upload Item" canGoBack title="Upload Item">
       <form className="space-y-4 p-4" onSubmit={handleSubmit(onValid)}>
         <div>
           <label className="flex h-48 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 text-gray-600 hover:border-orange-500 hover:text-orange-500">

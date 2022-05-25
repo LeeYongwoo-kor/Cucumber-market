@@ -22,7 +22,7 @@ interface ProductResponse {
 const Home: NextPage = () => {
   const { data } = useSWR<ProductResponse>("api/items");
   return (
-    <Layout title="Home" hasTabBar>
+    <Layout seoTitle="Enter Page" title="Home" hasTabBar>
       <Head>
         <title>Home</title>
       </Head>

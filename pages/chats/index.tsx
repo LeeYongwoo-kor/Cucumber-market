@@ -4,7 +4,7 @@ import Layout from "@components/layout";
 
 const Chats: NextPage = () => {
   return (
-    <Layout hasTabBar title="Chat">
+    <Layout seoTitle="Chat" hasTabBar title="Chat">
       <div className="divide-y-[1px] py-10">
         {[1, 1, 1, 1, 1, 1, 1].map((_, i) => (
           <Link href={`/chats/${i}`} key={i}>
