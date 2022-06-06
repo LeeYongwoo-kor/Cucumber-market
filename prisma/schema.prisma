@@ -39,6 +39,8 @@ model Token {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Item {
@@ -53,6 +55,8 @@ model Item {
   description String   @db.MediumText
   records     Record[]
   favCount    Int      @default(0)
+
+  @@index([userId])
 }
 
 model Post {
@@ -66,6 +70,8 @@ model Post {
   updatedAt   DateTime @updatedAt
   answers     Answer[]
   wonderings  Wondering[]
+
+  @@index([userId])
 }
 
 model Review {
@@ -78,6 +84,9 @@ model Review {
   createFor    User     @relation(name:"receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
   createdForId Int
   score        Int
+
+  @@index([createdById])
+  @@index([createdForId])
 }
 
 model Answer {
@@ -89,6 +98,9 @@ model Answer {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   answer      String   @db.MediumText()
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model Wondering {
@@ -99,6 +111,9 @@ model Wondering {
   post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model Record {
@@ -110,6 +125,9 @@ model Record {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   recordKind  RecordKind
+
+  @@index([userId])
+  @@index([itemId])
 }
 
 enum RecordKind {
@@ -128,6 +146,8 @@ model Stream {
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId      Int
     messages    Message[]
+
+    @@index([userId])
 }
 
 model Message {
@@ -139,4 +159,7 @@ model Message {
     message     String   @db.MediumText
     stream      Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
     streamId    Int
+
+    @@index([userId])
+    @@index([streamId])
 }
