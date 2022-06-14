@@ -26,7 +26,14 @@ const Profile: NextPage<CurrentUserProps> = ({ user }) => {
     <Layout seoTitle="Profile" hasTabBar title="Profile">
       <div className="py-10 px-4">
         <div className="items-center- flex space-x-3">
-          <div className="aspect-square w-16 rounded-full bg-slate-300" />
+          {user?.avatar ? (
+            <img
+              src={`https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${user?.avatar}/avatar`}
+              className="aspect-square w-16 rounded-full bg-slate-300"
+            />
+          ) : (
+            <div className="aspect-square w-16 rounded-full bg-slate-300" />
+          )}
           <div className="flex flex-col">
             <span className="font-medium text-gray-900">{user?.name}</span>
             <Link href="/profile/edit">

@@ -5,7 +5,7 @@ import Layout from "@components/layout";
 import TextArea from "@components/textarea";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Item } from "@prisma/client";
 
@@ -13,6 +13,7 @@ interface UploadItemForm {
   name: string;
   price: number;
   description: string;
+  photo: FileList;
 }
 
 interface UploadItemMutation {
@@ -22,18 +23,36 @@ interface UploadItemMutation {
 
 const Upload: NextPage = () => {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<UploadItemForm>();
+  const { register, handleSubmit, watch } = useForm<UploadItemForm>();
   const [uploadItem, { loading, data }] =
     useMutation<UploadItemMutation>("/api/items");
-  const onValid = (data: UploadItemForm) => {
+  const onValid = async ({ name, price, description }: UploadItemForm) => {
     if (loading) return;
-    uploadItem(data);
+    if (photo && photo.length > 0) {
+      const { uploadURL } = await (await fetch(`/api/files`)).json();
+      const form = new FormData();
+      form.append("file", photo[0], name);
+      const {
+        result: { id },
+      } = await (await fetch(uploadURL, { method: "POST", body: form })).json();
+      uploadItem({ name, price, description, photoId: id });
+    } else {
+      uploadItem({ name, price, description });
+    }
   };
   useEffect(() => {
     if (data?.ok) {
       router.push(`/items/${data.item.id}`);
     }
   }, [data, router]);
+  const photo = watch("photo");
+  const [photoPreview, setPhotoPreview] = useState("");
+  useEffect(() => {
+    if (photo && photo.length > 0) {
+      const file = photo[0];
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  }, [photo]);
   return (
     <Layout seoTitle="Upload Item" canGoBack title="Upload Item">
       <form className="space-y-4 p-4" onSubmit={handleSubmit(onValid)}>

@@ -39,7 +39,7 @@ const EditProfile: NextPage<CurrentUserProps> = ({ user }) => {
     if (user?.name) setValue("name", user.name);
     if (user?.avatar)
       setAvatarPreview(
-        `https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${user?.avatar}/public`
+        `https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${user?.avatar}/avatar`
       );
   }, [user, setValue]);
   const [editProfile, { data, loading }] =
