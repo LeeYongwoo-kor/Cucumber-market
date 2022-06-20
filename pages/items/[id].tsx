@@ -47,15 +47,14 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
     <Layout seoTitle="Item Detail" canGoBack>
       <div className="px-4 py-4">
         <div className="mb-8">
-          <img
-            src={`https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${data?.product.image}/public`}
-            className="h-96 bg-slate-300"
-          />
-          <div className="flex items-center space-x-3 border-t border-b py-3">
-            <img
-              src={`https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${data?.product?.user?.avatar}/avatar`}
-              className="aspect-square w-12 rounded-full bg-slate-300"
+          <div className="relative  pb-80">
+            <Image
+              src={`https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${data?.product.image}/public`}
+              className="bg-slate-300 object-cover"
+              layout="fill"
             />
+          </div>
+          <div className="flex cursor-pointer items-center space-x-3 border-t border-b py-3">
             <div className="cursor-pointer">
               <p className="text-sm font-medium text-gray-700">
                 {item?.user?.name}
